@@ -1,0 +1,56 @@
+* {
+    margin: 0px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.mainGrid{
+    display: grid;
+    background-color: black;
+    width: 100vw;
+    height: 100vh;
+    grid-template-columns: 90% 10%;
+    grid-template-rows: 30px 40% auto;
+    grid-template-areas: 
+    "navbar navbar"
+    "output options"
+    "nodes options";
+}
+
+.navbar{
+    background-color: rgb(29, 29, 29);
+
+    grid-area: navbar;
+    z-index: 1;
+    box-shadow: 2px 2px 20px rgba(0,0,0,0.2);
+}
+.output{
+    background: linear-gradient(0deg,rgb(39, 39, 39) -100%,rgb(45, 45, 45) 50%,rgb(39, 39, 39) 200%);
+    grid-area: output;
+}
+.nodeArea{
+    overflow: hidden;
+    grid-area: nodes;
+    
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgb(117, 117, 117);
+}
+.nodeRenderer{
+    background: rgb(39, 39, 39);
+    background-image: radial-gradient(rgba(255,255,255,1) 2px, rgba(255,255,255,0) 0);
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><circle cx="10" cy="10" r="1.7" fill="rgba(255,255,255,0.1)"/></svg>');
+    
+    background-size: 40px 40px;
+    will-change: transform;
+    background-position: 50% 50%;
+    background-repeat: repeat;
+    width: 100%;
+    
+
+}
+.options{
+    border-left: 3px solid rgba(255,255,255,0.3);
+    background: linear-gradient(0deg,rgb(39, 39, 39) -100%,rgb(57, 57, 57) 50%,rgb(39, 39, 39) 200%);
+    grid-area: options;
+    overflow: hidden;
+}

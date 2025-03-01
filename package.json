@@ -1,0 +1,29 @@
+{
+  "name": "scheduler",
+  "version": "1.0.0",
+  "description": "application to assist department chairs in scheduling courses given a variety of constraints and criteria",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "keywords": [
+    "crud",
+    "mongodb"
+  ],
+  "author": "August",
+  "license": "ISC",
+  "dependencies": {
+    "@picocss/pico": "^2.0.6",
+    "csv-parser": "^3.0.0",
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "fs": "^0.0.1-security",
+    "google-auth-library": "^9.4.1",
+    "mongoose": "^7.4.0",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.0.3"
+  }
+}
