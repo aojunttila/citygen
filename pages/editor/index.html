@@ -28,7 +28,7 @@
             font-family: 'Poppins', sans-serif;
             margin: 0; /* Remove default body margin */
             overflow-x: hidden; /* Prevent horizontal scroll */
-            height: 200vh; /* Ensure body is tall enough to allow scrolling */
+            height: 150vh; /* Ensure body is tall enough to allow scrolling */
         }
 
         /* Ensure the canvas covers the entire viewport */
@@ -73,7 +73,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 150px 50px;
+            padding: 150px 15px;
             background-color: #f4f4f4;
             color: #333;
             text-align: left;
@@ -86,29 +86,34 @@
 
         /* Image on the left */
         .instructions img {
-            max-width: 200px;
+            max-width: 700px;
             height: auto;
-            margin-right: 20px; /* Space between image and text */
+            margin-right: 50px; /* Space between image and text */
+            margin-left: 115px;
         }
 
         /* Text styles for instructions */
         .instructions h2 {
-            font-size: 2rem;
+            font-size: 3.5rem;
             font-weight: 600;
         }
 
         .instructions p {
-            font-size: 1.2rem;
+            font-size: 2rem;
             line-height: 1.5;
         }
 
         .instructions a {
-            padding: 20px 20px;
+            padding: 150px 100px;
             background-color: #3498db;
             color: white;
             border-radius: 5px;
             text-decoration: none;
             font-weight: 600;
+        }
+        .instructions li {
+            font-size:1.25rem;
+            padding: 15px 15px;
         }
 
         /* Parallax effect */
@@ -150,18 +155,20 @@
     <!-- Instructions section -->
     <div class="instructions">
         <!-- Image to the left -->
-        <img src="https://your-image-url.com/your-image.jpg" alt="Instructions Image">
+        <img src="/assets/Screenshot_320.png" alt="Instructions Image">
 
         <!-- Text content -->
         <div>
             <h2>How to Use the City Generator</h2>
-            <p>Welcome to the City Generator! Follow the steps below to start generating your city:</p>
+            <p>Welcome to the City Generator!</p>
+            <p>Follow the steps below to start generating your city:</p>
+            
             <ol class="list-decimal ml-5">
                 <li>Click on "Get Started" to enter the city editor.</li>
-                <li>Adjust settings to customize the city layout.</li>
-                <li>Click "Generate" to create your city model!</li>
+                <li>Create/delete/edit Nodes to create your procedural city!.</li>
+                <li>Plug the nodes into Output to create your city model!</li>
             </ol>
-            <p>Happy building!</p>
+            
            
         </div>
     </div>
