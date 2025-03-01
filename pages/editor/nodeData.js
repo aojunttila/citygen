@@ -184,6 +184,209 @@ export const paramReference = {
             ],
         ]
     },
+    roads:{
+        categoryName:"Roads",
+        lookup:["roadGrid","heightedRoadGrid"],
+        names:["Road Grid","Road Grid 2"],
+        values:[
+            [
+                {type:"display",label:"Road Map",input:"none",output:"none"},
+                {type:"label",justify:"right",label:"Road Map",input:"none",output:"roadmap"},
+                {type:"slider",label:"Road Width",control:"float",input:"none",width:"150px",output:"none",min:0.1,max:10,default:5},
+                {type:"slider",label:"X Spacing",control:"float",input:"none",width:"150px",output:"none",min:5,max:50,default:30},
+                {type:"slider",label:"Y Spacing",control:"float",input:"none",width:"150px",output:"none",min:5,max:50,default:30},
+                {type:"slider",label:"X Offset",control:"int",input:"none",width:"150px",output:"none",min:0,max:50,default:0},
+                {type:"slider",label:"Y Offset",control:"int",input:"none",width:"150px",output:"none",min:0,max:50,default:0},
+
+                {type:"refreshFunction",function:(nodeObject)=>{
+                    const paramListElement = nodeObject.element.children[1];
+                    const width = paramListElement.children[2].data;
+                    const boardWidth = 256
+                    const Xspacing = paramListElement.children[3].data;
+                    const Zspacing = paramListElement.children[4].data;
+                    const Xoffset = paramListElement.children[5].data;
+                    const Zoffset = paramListElement.children[6].data;
+                    
+                    const roadData=[]
+                    for(let x=-1;x<(256/Xspacing);x++){
+                        for(let z=-1;z<(256/Zspacing);z++){
+                            const zPos = z*Zspacing+Zoffset
+                            const xPos = x*Xspacing+Xoffset
+                            if(zPos<256&&zPos>0){
+                                roadData.push({points:[
+                                    xPos>0?xPos:0,0,zPos,
+                                    xPos+Xspacing<256?xPos+Xspacing:256,0,zPos,
+                                ],width:width})
+                            }
+                            
+                            if(xPos<256&&xPos>0){
+                                roadData.push({points:[
+                                    xPos,0,zPos>0?zPos:0,
+                                    xPos,0,zPos+Zspacing<256?zPos+Zspacing:256,
+                                ],width:width})
+                            }
+                        }
+                    }
+
+                    paramListElement.children[1].updateValue(roadData)
+
+                    const canvas = document.createElement("canvas");
+                    canvas.width = 256;
+                    canvas.height = 256;
+                    const ctx = canvas.getContext("2d");
+                    const imageData = ctx.createImageData(canvas.width, canvas.height);
+                    const data = imageData.data;
+                    for (let y = 0; y < canvas.height; y++) {
+                        for (let x = 0; x < canvas.width; x++) {
+                            const index = (y * canvas.width + x) * 4;
+                            data[index] = 255;    
+                            data[index + 1] = 255;
+                            data[index + 2] = 0;
+                            data[index + 3] = 255;
+                        }
+                    }
+                    for(const a of roadData){
+                        const x1 = a.points[0]
+                        const z1 = a.points[2]
+                        const x2 = a.points[3]
+                        const z2 = a.points[5]
+                        const width = a.width
+                        ctx.beginPath();
+                        ctx.moveTo(x1, z1);
+                        ctx.lineTo(x2, z2);
+                        ctx.lineWidth = width;
+                        ctx.strokeStyle = "white";
+                        ctx.stroke();
+                    }
+                    nodeObject.wrapperList[0].updateValue(ctx.canvas.toDataURL("image/png"))
+
+                }}
+                
+            ],
+            [
+                {type:"display",label:"Road Map",input:"none",output:"none"},
+                {type:"label",justify:"right",label:"Road Map",input:"none",output:"roadmap"},
+                {type:"label",justify:"left",label:"Height Map",input:"heightmap",output:"none"},
+
+                {type:"slider",label:"Road Width",control:"float",input:"none",width:"150px",output:"none",min:0.1,max:10,default:5},
+                {type:"slider",label:"X Spacing",control:"float",input:"none",width:"150px",output:"none",min:5,max:50,default:30},
+                {type:"slider",label:"Y Spacing",control:"float",input:"none",width:"150px",output:"none",min:5,max:50,default:30},
+                {type:"slider",label:"X Offset",control:"int",input:"none",width:"150px",output:"none",min:0,max:50,default:0},
+                {type:"slider",label:"Y Offset",control:"int",input:"none",width:"150px",output:"none",min:0,max:50,default:0},
+                {type:"slider",label:"Height Offset",control:"float",input:"none",width:"150px",output:"none",min:0,max:10,default:5},
+                {type:"slider",label:"Resolution",control:"int",input:"none",width:"150px",output:"none",min:1,max:20,default:10},
+
+                {type:"refreshFunction",function:(nodeObject)=>{
+                    const paramListElement = nodeObject.element.children[1];
+                    const image = paramListElement.children[2].data;
+                    const width = paramListElement.children[3].data;
+                    const boardWidth = 256
+                    const Xspacing = paramListElement.children[4].data;
+                    const Zspacing = paramListElement.children[5].data;
+                    const Xoffset = paramListElement.children[6].data;
+                    const Zoffset = paramListElement.children[7].data;
+                    const heightOffset = paramListElement.children[8].data;
+                    const resolution = paramListElement.children[9].data;
+                    
+                    const roadData=[]
+                    if(image==null){return}
+                    const heightData = image.getImageData(0, 0, image.canvas.width, image.canvas.height).data;
+                    const pointCount = resolution+1;
+                    function c(a){
+                        return a>0?(a<255?a:256):0
+                    }
+                    for(let x=-1;x<(256/Xspacing);x++){
+                        for(let z=-1;z<(256/Zspacing);z++){
+                            const zPos = z*Zspacing+Zoffset
+                            const xPos = x*Xspacing+Xoffset
+                                if(zPos<256&&zPos>0){
+                                const heightDiff = 0.21
+                                let pointData = []
+                                for(let i=0;i<pointCount+1;i++){
+                                    let xPos2 = xPos+(i/pointCount)*Xspacing
+                                    xPos2=xPos2>0?(xPos2<255?xPos2:255):0
+                                    const height = heightData[(Math.floor(xPos2)+Math.floor(zPos)*image.canvas.width)*4]*heightDiff
+                                    
+                                    pointData.push(xPos2>0?xPos2:0)
+                                    pointData.push(height-30+heightOffset)
+                                    //console.log(height-30+heightOffset)
+                                    pointData.push(zPos)
+                                }
+                                
+                                roadData.push({points:pointData,width:width,pointCount:pointCount})
+                            }
+                            
+                            if(xPos<256&&xPos>0){
+                                const heightDiff = 0.21
+                                let pointData = []
+                                for(let i=0;i<pointCount+1;i++){
+                                    let zPos2 = zPos+(i/pointCount)*Zspacing
+                                    zPos2=zPos2>0?(zPos2<255?zPos2:255):0
+                                    const height = heightData[(Math.floor(c(xPos))+Math.floor(zPos2)*image.canvas.width)*4]*heightDiff
+                                    pointData.push(xPos)
+                                    pointData.push(height-30+heightOffset)
+                                    pointData.push(zPos2>0?zPos2:0)
+                                }
+                                roadData.push({points:pointData,width:width,pointCount:pointCount})
+                            }
+                        }
+                    }
+
+                    paramListElement.children[1].updateValue(roadData)
+
+                    const canvas = document.createElement("canvas");
+                    canvas.width = 256;
+                    canvas.height = 256;
+                    const ctx = canvas.getContext("2d");
+                    const imageData = ctx.createImageData(canvas.width, canvas.height);
+                    const data = imageData.data;
+                    for (let y = 0; y < canvas.height; y++) {
+                        for (let x = 0; x < canvas.width; x++) {
+                            const index = (y * canvas.width + x) * 4;
+                            data[index] = 255;    
+                            data[index + 1] = 255;
+                            data[index + 2] = 0;
+                            data[index + 3] = 255;
+                        }
+                    }
+                    for(const a of roadData){
+                        const x1 = a.points[0]
+                        const z1 = a.points[2]
+                        const x2 = a.points[3+(a.pointCount-1||0)*3]
+                        const z2 = a.points[5+(a.pointCount-1||0)*3]
+                        const width = a.width
+                        ctx.beginPath();
+                        ctx.moveTo(x1, z1);
+                        ctx.lineTo(x2, z2);
+                        ctx.lineWidth = width;
+                        ctx.strokeStyle = "white";
+                        ctx.stroke();
+                    }
+                    nodeObject.wrapperList[0].updateValue(ctx.canvas.toDataURL("image/png"))
+
+                }}
+                
+            ],
+        ]
+
+    },
+    buildings:{
+        categoryName:"Buildings",
+        lookup:["buildingScatter"],
+        names:["Random Scatter"],
+        values:[
+            [
+                {type:"label",justify:"right",label:"Building Map",input:"none",output:"buildingmap"},
+                {type:"label",justify:"left",label:"Height Map",input:"heightmap",output:"none"},
+                
+                {type:"refreshFunction",function:(nodeObject)=>{
+                    const wrapperList = nodeObject.wrapperList;
+                
+                }}
+            ],
+        ]
+
+    },
     modifiers:{
         categoryName:"Modifiers",
         lookup:["heightAdjust","colorAdjust","heightRamp","colorRamp"],
@@ -606,15 +809,21 @@ export const paramReference = {
             [
                 {type:"label",justify:"left",label:"Height Map",input:"heightmap",output:"none"},
                 {type:"label",justify:"left",label:"Color Map",input:"colormap",output:"none"},
+                {type:"label",justify:"left",label:"Road Map",input:"roadmap",output:"none"},
+                {type:"label",justify:"left",label:"Building Map",input:"buildingmap",output:"none"},
                 {type:"slider",label:"Scale",control:"int",input:"none",width:"150px",output:"none",min:64,max:1024,default:256},
                 {type:"slider",label:"Resolution",control:"int",input:"none",width:"150px",output:"none",min:64,max:1024,default:256},
 
                 {type:"refreshFunction",function:(nodeObject)=>{
+                    
                     const paramListElement = nodeObject.element.children[1];
                     const p1 = paramListElement.children[0].data
                     const p2 = paramListElement.children[1].data;
+                    const p3 = paramListElement.children[2].data;
+                    const p4 = paramListElement.children[3].data;
                     if(p1!=null&&p2!=null){
-                        createMesh(nodeObject.wrapperList[2].data,p1,p2)
+                        console.log("output")
+                        createMesh(nodeObject.wrapperList[4].data,p1,p2,p3,p4)
                     }
                 }}
             ],

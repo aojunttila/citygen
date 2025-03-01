@@ -136,6 +136,14 @@ function initializeNode(element,scene){
             header.style.backgroundColor="rgb(220, 123, 5)";
             index=paramReference.maps.lookup.indexOf(nodeID);
             if(index!=-1){addParamsToNode(paramReference.maps.values[index],element);}
+        }else if(nodeType=="roads"){
+            header.style.backgroundColor="rgb(123, 123, 225)";
+            index=paramReference.roads.lookup.indexOf(nodeID);
+            if(index!=-1){addParamsToNode(paramReference.roads.values[index],element);}
+        }else if(nodeType=="buildings"){
+            header.style.backgroundColor="rgb(123, 123, 225)";
+            index=paramReference.buildings.lookup.indexOf(nodeID);
+            if(index!=-1){addParamsToNode(paramReference.buildings.values[index],element);}
         }
     }
     repositionNode(element)
@@ -657,7 +665,12 @@ function addConnectorPoint(type,input,element){
         color = "rgba(0,235,0,1)"
     }else if(input=="colormap"){
         color = "rgba(0,235,200,1)"
+    }else if(input=="roadmap"){
+        color = "rgb(147, 147, 255)"
+    }else if(input=="buildingmap"){
+        color = "rgba(255,235,0,1)"
     }
+
     path.setAttribute("fill",color)
 
     svg.style="position:absolute;z-index:100;cursor:pointer;"
