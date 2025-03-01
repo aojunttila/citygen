@@ -31,7 +31,7 @@ export function createRenderer(element){
     //createMesh(256,256,heightMapUrl,colorMapUrl)
     //renderer.setClearColor( 0xffbd25, 1 );	
     animate();
-    const light = new THREE.DirectionalLight(0xffffff, 0.01);
+    const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(50, 100, 50).normalize();
     scene.add(light);
 
@@ -55,7 +55,7 @@ export function createRenderer(element){
         const bounds = element.getBoundingClientRect()
         renderer.setSize(bounds.width, bounds.height);
         //renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.aspect = bounds.width / bounds.height;
+        //camera.aspect = bounds.width / bounds.height;
         camera.updateProjectionMatrix();
     });
 
@@ -79,7 +79,7 @@ export function createMesh(scale, heightMapCTX, colorMapCTX, roadData, buildingD
     }
     scene.add( roadGroup );
 
-    buildingData = [{height:10,xWidth:5,zWidth:10,x:128,y:0,z:128}]
+    //buildingData = [{height:10,xWidth:5,zWidth:10,x:128,y:0,z:128}]
     scene.remove(cityGroup);
 
     cityGroup = new THREE.Group();
@@ -131,13 +131,16 @@ export function createBuilding(data,size,texture){
     const xWidth = data.xWidth||5
     const zWidth = data.zWidth||10
     const height = data.height||10
+    const scale = data.scale||1
+    const baseColor = data.baseColor||'rgb(100,100,100)'
+    const windowColor = data.windowColor||'rgb(255,255,255)'
     const canvas = document.createElement('canvas');
     canvas.width = 256;
     canvas.height = 256;
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = 'rgb('+Math.random()*255+',0,0)';
     ctx.fillRect(0, 0, 256, 256);
-    const baseColor = 'rgb(100,100,100)'
+    
     const materials = [null,null,null,null,null,null];
 
     canvas.width = zWidth*2*textureScale+textureScale;
@@ -152,18 +155,11 @@ export function createBuilding(data,size,texture){
         return texture
     }
     function material(){
-        return new THREE.MeshStandardMaterial({
-            emissive: texture(),
-            emissiveIntensity: 1,
-            emissiveMap: texture(),
-            emissiveMapIntensity: 1,
+        return new THREE.MeshPhongMaterial({
             map: texture(),
-            color: 0xffffff,
             side: THREE.DoubleSide,
-            //flatShading: true,
-            //shininess: 0,
-
-            
+            flatShading: true,
+            shininess: 0,
         });
     }
 
@@ -171,10 +167,10 @@ export function createBuilding(data,size,texture){
         canvas.width = w*2*textureScale+textureScale;
         canvas.height = h*2*textureScale+textureScale;
         ctx.fillStyle = baseColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         for(let x=0;x<w;x++){
-            for(let y=0;y<10;y++){
-                ctx.fillStyle = 'rgb('+255+',0,0)';
+            for(let y=0;y<h;y++){
+                ctx.fillStyle = windowColor
                 ctx.fillRect(x*2*textureScale+textureScale, y*2*textureScale+textureScale, textureScale, textureScale);
             }
         }
@@ -182,18 +178,14 @@ export function createBuilding(data,size,texture){
     
     makeWindows(zWidth,height)
     materials[0] = material()
-    materials[1] = material()
+    materials[1] = materials[0]
     makeWindows(xWidth,height)
     materials[4] = material()
-    materials[5] = material()
+    materials[5] = materials[4]
     ctx.fillStyle = baseColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     materials[2] = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load(ctx.canvas.toDataURL()) });
-    materials[3] = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load(ctx.canvas.toDataURL()) });
-
-
-    ctx.fillStyle = 'baseColor';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    materials[3] = materials[2]
     //materials[2] = new THREE.MeshPhongMaterial({ map: texture() });
 
 
@@ -201,12 +193,13 @@ export function createBuilding(data,size,texture){
     
     
     const colorMap = new THREE.TextureLoader().load(ctx.canvas.toDataURL(), () => {
-        const geometry = new THREE.BoxGeometry(1, 2.15, 1);
+        const geometry = new THREE.BoxGeometry(1, 2.2, 1);
         const building = new THREE.Mesh(geometry, materials);
         const material = new THREE.MeshPhongMaterial( { map: colorMap } );
-        //building.scale.set(50,50,50);
-        building.scale.set(xWidth*5, height*5, zWidth*5)
-        building.position.set(xPos-xWidth/2, height/2+50, zPos-zWidth/2);
+        //building.scale.set(scale,scale,scale);
+        
+        building.position.set(xPos, yPos+30+((height))*scale, zPos);
+        building.scale.set(xWidth*scale, height*scale, zWidth*scale)
         
         cityGroup.add( building );
     });

@@ -17,11 +17,12 @@
       <div class="nodeArea">
         <div class="nodeRenderer">
           <div class="node" node-type="modifiers" node-id="colorRamp" name="Color Ramp" x="500" y="320" connections='[{"index":0,"type":"input","id":"abcdefgh"},{"index":0,"type":"output","id":"abcdefg"}]'></div>
-          <div class="node" node-type="modifiers" node-id="heightAdjust" name="Height Adjust" x="170" y="20" connections='[{"index":0,"type":"output","id":"heighttogrid"},{"index":0,"type":"output","id":"abcdef"},{"index":0,"type":"output","id":"abcdefgh"},{"index":0,"type":"input","id":"abcd"}]'></div>
+          <div class="node" node-type="modifiers" node-id="heightAdjust" name="Height Adjust" x="170" y="20" connections='[{"index":0,"type":"output","id":"hbmap"},{"index":0,"type":"output","id":"heighttogrid"},{"index":0,"type":"output","id":"abcdef"},{"index":0,"type":"output","id":"abcdefgh"},{"index":0,"type":"input","id":"abcd"}]'></div>
           <div class="node" node-type="noise" node-id="simplex" name="Ridged Noise" x="-50" y="0" connections='[{"index":0,"type":"output","id":"abcd"}]'></div>
           <div class="node" node-type="misc" node-id="output" name="Output" x="600" y="120" connections='[{"index":0,"type":"input","id":"abcdef"},{"index":1,"type":"input","id":"abcdefg"},{"index":2,"type":"input","id":"abc"},{"index":3,"type":"input","id":"bmap"}]'></div>
-          <div class="node" node-type="buildings" node-id="buildingScatter" name="Random Scatter" x="150" y="450" connections='[{"index":0,"type":"output","id":"bmap"}]'></div>
-          <div class="node" node-type="roads" node-id="heightedRoadGrid" name="Road Grid" x="400" y="20" connections='[{"index":0,"type":"input","id":"heighttogrid"},{"index":0,"type":"output","id":"abc"}]'></div>
+          <div class="node" node-type="buildings" node-id="buildingGrid" name="Grid Scatter" x="150" y="450" connections='[{"index":2,"type":"input","id":"rmap"},{"index":0,"type":"output","id":"bmap"},{"index":0,"type":"input","id":"hbmap"},{"index":1,"type":"input","id":"bset"}]'></div>
+          <div class="node" node-type="buildings" node-id="buildingSet" name="Random Scatter" x="-50" y="450" connections='[{"index":0,"type":"output","id":"bset"}]'></div>
+          <div class="node" node-type="roads" node-id="heightedRoadGrid" name="Road Grid" x="400" y="20" connections='[{"index":0,"type":"output","id":"rmap"},{"index":0,"type":"input","id":"heighttogrid"},{"index":0,"type":"output","id":"abc"}]'></div>
         </div>
       </div>
       <div class="options">

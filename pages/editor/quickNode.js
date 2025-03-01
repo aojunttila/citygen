@@ -669,6 +669,8 @@ function addConnectorPoint(type,input,element){
         color = "rgb(147, 147, 255)"
     }else if(input=="buildingmap"){
         color = "rgba(255,235,0,1)"
+    }else if(input=="buildingset"){
+        color = "rgb(96, 154, 255)"
     }
 
     path.setAttribute("fill",color)
