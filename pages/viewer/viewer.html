@@ -6,80 +6,93 @@
   <title>GLTF/FlyExplore Viewer</title>
   <style>
     /* Basic reset and styling */
-    body {
-      margin: 0;
-      font-family: 'Arial', sans-serif;
-      background-color: #f4f4f9;
-      color: #4d4848;
-      overflow: hidden;
-    }
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  color: #4d4848;
+  overflow: hidden;
+}
 
-    /* Fullscreen canvas for Three.js rendering */
-    #canvas {
-      display: block;
-      width: 100%;
-      height: 100vh;
-      transition: width 0.3s, height 0.3s;
-    }
+/* Fullscreen canvas for Three.js rendering */
+#canvas {
+  display: block;
+  width: 100%;
+  height: 100vh;
+  transition: width 0.3s, height 0.3s;
+}
 
-    /* Drag and drop overlay UI */
-    #dropOverlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      background-color: rgba(68, 65, 65, 0.6);
-      color: #fff;
-      font-size: 2em;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      opacity: 1; /* Always visible */
-      pointer-events: auto;
-      z-index: 1000;
-    }
+/* Drag and drop overlay UI */
+#dropOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(68, 65, 65, 0.6);
+  color: #fff;
+  font-size: 2em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 1; /* Always visible */
+  pointer-events: auto;
+  z-index: 1000;
 
-    /* Drop overlay instructions */
-    #dropOverlay p {
-      margin: 10px;
-      font-size: 1.5em;
-      text-align: center;
-    }
+  /* Initial state for the text to be off-screen */
+  transform: translateY(-100%);
+  animation: slideDown 1s forwards;
+}
 
-    /* Button UI for upload */
-    #uploadButton {
-      background-color: #3498db;
-      color: white;
-      padding: 12px 20px;
-      
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1.2em;
-      transition: background-color 0.3s;
-    }
+/* Keyframes for sliding text */
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100%); /* Start from the top */
+  }
+  100% {
+    transform: translateY(0); /* End at the center */
+  }
+}
 
-    #uploadButton:hover {
-      background-color: #2980b9;
-    }
+/* Drop overlay instructions */
+#dropOverlay p {
+  margin: 10px;
+  font-size: 1.5em;
+  text-align: center;
+}
 
-    /* Simple header for better UI */
-    header {
-      position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 1.5em;
-      z-index: 999;
-      color: #675f5f;
-    }
+/* Button UI for upload */
+#uploadButton {
+  background-color: #3498db;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.2em;
+  transition: background-color 0.3s;
+}
 
-    /* File input styles (hidden but functional) */
-    #fileInput {
-      display: none;
-    }
+#uploadButton:hover {
+  background-color: #2980b9;
+}
+
+/* Simple header for better UI */
+header {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5em;
+  z-index: 999;
+  color: #675f5f;
+}
+
+/* File input styles (hidden but functional) */
+#fileInput {
+  display: none;
+}
     
   </style>
 
