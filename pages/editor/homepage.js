@@ -52,7 +52,7 @@ class Cloud {
 // Load GLTF Model
 const gltfLoader = new GLTFLoader();
 gltfLoader.load(
-    '/images/scene.gltf',
+    '/citygen/images/scene.gltf',
     (gltf) => {
         const model = gltf.scene;
         model.position.set(-4, -5, 0);
@@ -71,7 +71,7 @@ gltfLoader.load(
 );
 
 // Create Clouds (Flat 2D Sprites with texture)
-const cloudTexture = new THREE.TextureLoader().load('/images/cloud.png'); // Path to cloud texture (ensure cloud.png exists)
+const cloudTexture = new THREE.TextureLoader().load('/citygen/images/cloud.png'); // Path to cloud texture (ensure cloud.png exists)
 
 // Create a fixed number of clouds
 const cloudPositions = [
