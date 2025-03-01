@@ -111,7 +111,7 @@ export function createMesh(scale, heightMapCTX, colorMapCTX, roadData, buildingD
                 map: colorMap,
                 side: THREE.DoubleSide,
                 flatShading: true,
-                shininess: 0,
+                shininess: 50,
             });
 
             // Create the terrain mesh
@@ -159,7 +159,7 @@ export function createBuilding(data,size,texture){
             map: texture(),
             side: THREE.DoubleSide,
             flatShading: true,
-            shininess: 0,
+            shininess: 30,
         });
     }
 

@@ -839,8 +839,8 @@ export const paramReference = {
     },
     flow:{
         categoryName:"Flow",
-        lookup:["mergeHeight","mergeColor"],
-        names:["Merge Height","Merge Color"],
+        lookup:["mergeHeight","mergeColor","mergeBuildingSet"],
+        names:["Merge Height","Merge Color","Merge Building Set"],
         values:[
             [
                 {type:"display",label:"Height Map",input:"none",output:"none"},
@@ -961,6 +961,21 @@ export const paramReference = {
                         image2.putImageData(backgroundData, 0, 0);
                         nodeObject.wrapperList[0].updateValue(image2.canvas.toDataURL("image/png"))
                         nodeObject.wrapperList[6].updateValue(image2);
+                    }
+                }}
+            ],
+            [
+                {type:"label",justify:"right",label:"Building Set",input:"none",output:"buildingset"},
+                {type:"label",justify:"left",label:"Building Set",input:"buildingset",output:"none"},
+                {type:"label",justify:"left",label:"Building Set",input:"buildingset",output:"none"},
+                {type:"refreshFunction",function:(nodeObject)=>{
+                    const wrapperList = nodeObject.wrapperList;
+                    const output = wrapperList[0].data
+                    const background = wrapperList[1].data
+                    const foreground = wrapperList[2].data
+                    if(background!=null&&foreground!=null){
+                        const buildingSet = background.concat(foreground)
+                        wrapperList[0].updateValue(buildingSet)   
                     }
                 }}
             ],
