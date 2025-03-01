@@ -31,8 +31,12 @@ function init() {
   camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 500);
   camera.position.set(0, 2, 10);
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 3);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
   scene.add(ambientLight);
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+      light.position.set(50, 100, 50).normalize();
+      scene.add(light);
+
 
   controls = new PointerLockControls(camera, document.body);
   document.addEventListener('click', () => {
