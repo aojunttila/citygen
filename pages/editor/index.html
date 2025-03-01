@@ -1,32 +1,187 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <link href="styles.css" rel="stylesheet" />
-    <link href="quickNode.css" rel="stylesheet" />
-    <script src="script.js"></script>
-    <script src="three.min.js"></script>
-    <script type="module" src="quickNode.js"></script>
-    <title>Document</title>
-  </head>
-  <body>
-    <div class="mainGrid">
-      <div class="navbar">
-      </div>
-      <div class="output">
-      </div>
-      <div class="nodeArea">
-        <div class="nodeRenderer">
-          <div class="node" node-type="modifiers" node-id="colorRamp" name="Color Ramp" x="500" y="320" connections='[{"index":0,"type":"input","id":"abcdefgh"},{"index":0,"type":"output","id":"abcdefg"}]'></div>
-          <div class="node" node-type="modifiers" node-id="heightAdjust" name="Height Adjust" x="170" y="20" connections='[{"index":0,"type":"output","id":"hbmap"},{"index":0,"type":"output","id":"heighttogrid"},{"index":0,"type":"output","id":"abcdef"},{"index":0,"type":"output","id":"abcdefgh"},{"index":0,"type":"input","id":"abcd"}]'></div>
-          <div class="node" node-type="noise" node-id="simplex" name="Ridged Noise" x="-50" y="0" connections='[{"index":0,"type":"output","id":"abcd"}]'></div>
-          <div class="node" node-type="misc" node-id="output" name="Output" x="600" y="120" connections='[{"index":0,"type":"input","id":"abcdef"},{"index":1,"type":"input","id":"abcdefg"},{"index":2,"type":"input","id":"abc"},{"index":3,"type":"input","id":"bmap"}]'></div>
-          <div class="node" node-type="buildings" node-id="buildingGrid" name="Grid Scatter" x="150" y="450" connections='[{"index":2,"type":"input","id":"rmap"},{"index":0,"type":"output","id":"bmap"},{"index":0,"type":"input","id":"hbmap"},{"index":1,"type":"input","id":"bset"}]'></div>
-          <div class="node" node-type="buildings" node-id="buildingSet" name="Random Scatter" x="-50" y="450" connections='[{"index":0,"type":"output","id":"bset"}]'></div>
-          <div class="node" node-type="roads" node-id="heightedRoadGrid" name="Road Grid" x="400" y="20" connections='[{"index":0,"type":"output","id":"rmap"},{"index":0,"type":"input","id":"heighttogrid"},{"index":0,"type":"output","id":"abc"}]'></div>
-        </div>
-      </div>
-      <div class="options">
-      </div>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Generator</title>
+
+    <!-- Include Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Import Map for three.js and OrbitControls -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.157.0/build/three.module.js",
+                "OrbitControls": "https://unpkg.com/three@0.136.0/examples/jsm/controls/OrbitControls.js"
+            }
+        }
+    </script>
+
+    <!-- Link to Google Fonts for Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Apply Poppins font */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0; /* Remove default body margin */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            height: 150vh; /* Ensure body is tall enough to allow scrolling */
+        }
+
+        /* Ensure the canvas covers the entire viewport */
+        #bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place behind other content */
+            object-fit: cover; /* Make sure it covers the screen */
+        }
+
+        /* Welcome section */
+        .side-panel {
+            position: absolute;
+            top: 30%;
+            right: 0;
+            transform: translateY(-50%);
+            padding: 20px;
+            text-align: center;
+            opacity: 0;
+            animation: slideIn 1s forwards;
+            z-index: 1;
+        }
+
+        /* Animation for the side panel */
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Instructions section styles */
+        .instructions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 150px 15px;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: left;
+            position: relative;
+            bottom: -700px; /* Position it 20px from the bottom */
+            left: 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        /* Image on the left */
+        .instructions img {
+            max-width: 700px;
+            height: auto;
+            margin-right: 50px; /* Space between image and text */
+            margin-left: 115px;
+        }
+
+        /* Text styles for instructions */
+        .instructions h2 {
+            font-size: 3.5rem;
+            font-weight: 600;
+        }
+
+        .instructions p {
+            font-size: 2rem;
+            line-height: 1.5;
+        }
+
+        .instructions a {
+            padding: 150px 100px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .instructions li {
+            font-size:1.25rem;
+            padding: 15px 15px;
+        }
+
+        /* Parallax effect */
+        .parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://your-image-url.com');
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+            z-index: -1;
+        }
+
+        /* Ensure the body content is visible above the parallax */
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+        .dropshadow {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        .boxshadow {
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Parallax background -->
+    <div class="parallax-bg"></div>
+
+    <!-- Canvas for 3D content -->
+    <canvas id="bg"></canvas>
+
+    <!-- Welcome section -->
+    <div class="side-panel">
+        <h1 class="dropshadow text-white text-5xl font-bold mb-4">Welcome to City Generator</h1>
+        <p class="dropshadow text-white text-xl text-gray-200 mb-5">Create stunning, procedurally generated cities with ease.</p>
+        <a href="/pages/editor/main.html" class="boxshadow px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition">Get Started</a>
     </div>
-  </body>
+
+    <!-- Instructions section -->
+    <div class="instructions">
+        <!-- Image to the left -->
+        <img src="/images/Screenshot_320.png" alt="Instructions Image">
+
+        <!-- Text content -->
+        <div>
+            <h2>How to Use the City Generator</h2>
+            <p>Welcome to the City Generator!</p>
+            <p>Follow the steps below to start generating your city:</p>
+            
+            <ol class="list-decimal ml-5">
+                <li>Click on "Get Started" to enter the city editor.</li>
+                <li>Create/delete/edit Nodes to create your procedural city!</li>
+                <li>Plug the nodes into Output to create your city model!</li>
+            </ol>
+            
+           
+        </div>
+    </div>
+
+    <!-- Include the script for your homepage logic -->
+    <script type="module" src="homepage.js"></script>
+
+</body>
+
 </html>
