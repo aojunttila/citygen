@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GLTF/FlyExplore Viewer</title>
+  <style>
+    /* Basic reset and styling */
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9;
+      color: #4d4848;
+      overflow: hidden;
+    }
+
+    /* Fullscreen canvas for Three.js rendering */
+    #canvas {
+      display: block;
+      width: 100%;
+      height: 100vh;
+      transition: width 0.3s, height 0.3s;
+    }
+
+    /* Drag and drop overlay UI */
+    #dropOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background-color: rgba(68, 65, 65, 0.6);
+      color: #fff;
+      font-size: 2em;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 1; /* Always visible */
+      pointer-events: auto;
+      z-index: 1000;
+    }
+
+    /* Drop overlay instructions */
+    #dropOverlay p {
+      margin: 10px;
+      font-size: 1.5em;
+      text-align: center;
+    }
+
+    /* Button UI for upload */
+    #uploadButton {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 20px;
+      
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.2em;
+      transition: background-color 0.3s;
+    }
+
+    #uploadButton:hover {
+      background-color: #2980b9;
+    }
+
+    /* Simple header for better UI */
+    header {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5em;
+      z-index: 999;
+      color: #675f5f;
+    }
+
+    /* File input styles (hidden but functional) */
+    #fileInput {
+      display: none;
+    }
+    
+  </style>
+
+  <!-- Import Map for Three.js and examples -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.157.0/build/three.module.js",
+        "OrbitControls": "https://unpkg.com/three@0.157.0/examples/jsm/controls/OrbitControls.js",
+        "PointerLockControls": "https://unpkg.com/three@0.157.0/examples/jsm/controls/PointerLockControls.js",
+        "GLTFLoader": "https://unpkg.com/three@0.157.0/examples/jsm/loaders/GLTFLoader.js",
+        "GLTFExporter": "https://unpkg.com/three@0.157.0/examples/jsm/exporters/GLTFExporter.js",
+        "common": "./common.js",
+        "flyexplore": "./flyexplore.js"
+      }
+    }
+  </script>
+</head>
+<body>
+
+
+
+  <!-- Three.js canvas -->
+  <canvas id="canvas"></canvas>
+
+  <!-- Drag and drop overlay -->
+  <div id="dropOverlay">
+    <p>Drop your .glb or .gltf file here</p>
+    <button id="uploadButton">Browse Files</button>
+    <input type="file" id="fileInput" accept=".gltf,.glb" />
+  </div>
+
+
+  <script type="module" src="./gltfloader.js">
+    
+  </script>
+
+</body>
+</html>

@@ -1,3 +1,23 @@
+import * as THREE from 'three';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
+document.getElementById('exportButton').addEventListener('click', function() {
+    const exporter = new GLTFExporter();
+
+    exporter.parse(scene, function(result) {
+        const blob = new Blob([JSON.stringify(result)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'scene.glb';
+        link.click();
+
+        URL.revokeObjectURL(url);
+    }, { binary: true }); // Set to `true` if you want a `.glb` file instead of `.gltf`
+});
+
+
+
 let scene, camera, renderer, terrain, terrainMaterial, roadMesh;
 let roadGroup = null;
 let cityGroup = null;
@@ -357,4 +377,6 @@ export function createCurvedRoad(data,size){
     roadGroup.add( roadMesh );
 
 }
+
+
 
