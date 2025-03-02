@@ -72,13 +72,18 @@ export function createRenderer(element){
     }
 
     window.addEventListener('resize', () => {
-        const bounds = element.getBoundingClientRect()
-        renderer.setSize(bounds.width, bounds.height);
+        //const bounds = element.getBoundingClientRect()
+        //renderer.setSize(bounds.width-200, bounds.height);
         //renderer.setSize(window.innerWidth, window.innerHeight);
-        //camera.aspect = bounds.width / bounds.height;
-        camera.updateProjectionMatrix();
+        //camera.aspect = 1.9;
+        //camera.updateProjectionMatrix();
     });
 
+    const bounds2 = element.getBoundingClientRect()
+    renderer.setSize(bounds2.width, bounds.height);
+    //renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = 2.5;
+    camera.updateProjectionMatrix();
 
     animate()
 }

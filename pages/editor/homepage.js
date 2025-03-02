@@ -11,7 +11,7 @@ const NIGHT_MODE = false;
 // Setup Scene
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg') });
+const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg'),alpha: true});
 
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -19,11 +19,17 @@ camera.position.set(0, 5, 20);
 camera.lookAt(0, 10, 0);
 
 // Set the background color to a solid blue sky
-scene.background = new THREE.Color(0x3597db);
+//scene.background = new THREE.Color(0x3597db);
+renderer.setClearColor(0xffffff, 0);
+
 
 // Lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 3);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 scene.add(ambientLight);
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(200, 100, 400).normalize();
+    scene.add(light);
+
 
 // Declare cityObject in the outer scope
 let cityObject;
@@ -55,9 +61,9 @@ gltfLoader.load(
     '/images/scene.gltf',
     (gltf) => {
         const model = gltf.scene;
-        model.position.set(-4, -5, 0);
+        model.position.set(0, -5, 0);
         model.rotation.x = 0;
-        model.rotation.y = 0;
+        model.rotation.y = 1;
         model.scale.set(0.75, 0.75, 0.75);
         scene.add(model);
         cityObject = model;
@@ -97,9 +103,9 @@ cloudPositions.forEach(position => {
 
     const cloud = new THREE.Sprite(cloudMaterial);
     cloud.scale.set(2, 1.5, 2);  // Set fixed size for clouds
-    cloud.position.set(position.x, position.y, position.z);  // Set fixed position
+    cloud.position.set(position.x, position.y, position.z-10);  // Set fixed position
 
-    scene.add(cloud);
+    //scene.add(cloud);
     clouds.push(new Cloud(cloud));
 });
 
